@@ -4,28 +4,62 @@ import { ref } from 'vue'
 export const usePatientStore = defineStore('patients', () => {
   const patients = ref([
     {
-      id: 1,
+      id: Date.now().toString(),
       name: 'John Doe',
       age: 30,
       address: '123 Main St, Anytown, USA',
       diagnosis: 'Diagnosis',
       protocol: 'Protocol',
-      sessions: [
-        { id: 1, date: '2025-01-01', details: 'Session 1 details' },
-        { id: 2, date: '2025-01-08', details: 'Session 2 details' },
+      specialist: 'Specialist name',
+      date: '2025/01/01',
+      bsa: '1.73',
+      room: '101',
+      gender: 'Male',
+      caseSheetNumber: '1234567890',
+      protocolName: 'Protocol Name',
+      numberOfDoses: '10',
+      drugs: [
+        {
+          id: Date.now().toString(),
+          no: 1,
+          name: 'Drug 1',
+          dilutedIn: 'Diluted in',
+          routOfAdministration: 'Rout of administration',
+          timeToStartAdministration: 'Time to start administration',
+          durationOfAdministration: 'Duration of administration',
+          note: 'Note',
+        },
       ],
+
+      // sessions: [
+      //   { id: 1, date: '2025-01-01', details: 'Session 1 details' },
+      //   { id: 2, date: '2025-01-08', details: 'Session 2 details' },
+      // ],
     },
   ])
-  const patient = ref(null)
+  const patient = ref({
+    id: '',
+    name: '',
+    age: '',
+    address: '',
+    diagnosis: '',
+    protocol: '',
+    // sessions: [],
+  })
+  const open = ref(false)
+
+  const toggleOpen = () => {
+    open.value = !open.value
+  }
 
   const setPatient = (patientData) => {
     patient.value = patientData
   }
 
-  const addPatient = (patient) => {
-    patient.id = Date.now()
-    patient.sessions = []
-    patients.value.push(patient)
+  const addPatient = (patientData) => {
+    patientData.id = Date.now().toString()
+    patientData.sessions = []
+    patients.value.push(patientData)
   }
 
   const updatePatient = (id, updatedPatient) => {
@@ -51,7 +85,15 @@ export const usePatientStore = defineStore('patients', () => {
   }
 
   const resetPatient = () => {
-    patient.value = null
+    patient.value = {
+      id: '',
+      name: '',
+      age: '',
+      address: '',
+      diagnosis: '',
+      protocol: '',
+      // sessions: [],
+    }
   }
 
   return {
@@ -63,5 +105,7 @@ export const usePatientStore = defineStore('patients', () => {
     setPatient,
     patient,
     resetPatient,
+    open,
+    toggleOpen,
   }
 })

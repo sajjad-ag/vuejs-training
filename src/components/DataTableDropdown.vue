@@ -22,9 +22,8 @@ const handleDelete = (id) => {
 }
 
 const handleEdit = (patient) => {
-  console.log(patient)
   patientStore.setPatient(patient)
-  router.push(`/patient/${patient.id}/edit`)
+  patientStore.toggleOpen()
 }
 
 const handleView = (patient) => {
@@ -37,9 +36,9 @@ const handleView = (patient) => {
   <DropdownMenu>
     <DropdownMenuTrigger as="Button" variant="ghost" class="w-8 h-8">...</DropdownMenuTrigger>
     <DropdownMenuContent>
-      <DropdownMenuItem @click="handleView(patient)"> View </DropdownMenuItem>
-      <DropdownMenuItem @click="handleEdit(patient)"> Edit </DropdownMenuItem>
-      <DropdownMenuItem @click="handleDelete(patient.id)"> Delete </DropdownMenuItem>
+      <DropdownMenuItem @click="() => handleView(patient)"> View </DropdownMenuItem>
+      <DropdownMenuItem @click="() => handleEdit(patient)"> Edit </DropdownMenuItem>
+      <DropdownMenuItem @click="() => handleDelete(patient.id)"> Delete </DropdownMenuItem>
     </DropdownMenuContent>
   </DropdownMenu>
 </template>

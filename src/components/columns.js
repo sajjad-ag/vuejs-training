@@ -14,10 +14,7 @@ export const patientColumns = [
     accessorKey: 'address',
     header: 'Address',
   },
-  {
-    accessorKey: 'age',
-    header: 'Age',
-  },
+
   {
     id: 'actions',
     enableHiding: false,
