@@ -1,14 +1,16 @@
 <script setup>
 import { usePatientStore } from '@/stores/patients'
 import { Button } from '@/components/ui/button'
-import PatientForm from './PatientForm.vue'
 import DataTableDropdown from './DataTableDropdown.vue'
 import { Table, TableHeader, TableHead, TableCell, TableRow } from '@/components/ui/table'
+import { useRouter } from 'vue-router'
 const patientStore = usePatientStore()
+
+const router = useRouter()
 
 const handleAddNew = () => {
   patientStore.resetPatient()
-  patientStore.toggleOpen()
+  router.push('/new-patient')
 }
 </script>
 
@@ -42,6 +44,5 @@ const handleAddNew = () => {
         </TableRow>
       </TableHeader>
     </Table>
-    <PatientForm />
   </div>
 </template>

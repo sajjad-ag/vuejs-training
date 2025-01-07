@@ -1,12 +1,14 @@
-<script setup lang="ts">
+<script setup>
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
-import router from '@/router'
 import { usePatientStore } from '@/stores/patients'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
 
 const props = defineProps({
   patient: {
@@ -23,7 +25,7 @@ const handleDelete = (id) => {
 
 const handleEdit = (patient) => {
   patientStore.setPatient(patient)
-  patientStore.toggleOpen()
+  router.push(`/patient/${patient.id}/edit`)
 }
 
 const handleView = (patient) => {

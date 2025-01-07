@@ -3,37 +3,87 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-} from '@/components/ui/dialog'
+  CalendarDate,
+  DateFormatter,
+  getLocalTimeZone,
+  parseDate,
+  today,
+} from '@internationalized/date'
 import { usePatientStore } from '@/stores/patients'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
 import { useForm } from 'vee-validate'
 import { FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form'
-import { onMounted, watch } from 'vue'
-
+import { computed, onMounted, watch } from 'vue'
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from './ui/select'
+import { useToast } from './ui/toast'
+import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
+import { Calendar as CalendarIcon, Trash2Icon } from 'lucide-vue-next'
+import { Calendar } from './ui/calendar'
+import { cn } from '@/lib/utils'
+import { toDate } from 'radix-vue/date'
+import { Separator } from './ui/separator'
+import { Label } from './ui/label'
+const { toast } = useToast()
 const patientStore = usePatientStore()
+
+const df = new DateFormatter('en-US', {
+  dateStyle: 'long',
+})
+
 const formSchema = toTypedSchema(
   z.object({
-    name: z.string().min(2).max(50),
-    age: z.number().min(2).max(50),
-    address: z.string().min(2).max(50),
-    diagnosis: z.string().min(2).max(50),
-    protocol: z.string().min(2).max(50),
+    name: z.string(),
+    age: z.number(),
+    address: z.string(),
+    diagnosis: z.string(),
+    protocol: z.string(),
+    date: z.string(),
+    bsa: z.string(),
+    room: z.string(),
+    gender: z.string(),
+    caseSheetNumber: z.string(),
+    protocolName: z.string(),
+    numberOfDoses: z.number(),
+    specialist: z.string(),
+    drugs: z.array(
+      z.object({
+        no: z.number(),
+        name: z.string(),
+        dilutedIn: z.string(),
+        routOfAdministration: z.string(),
+        timeToStartAdministration: z.string(),
+        durationOfAdministration: z.string(),
+        note: z.string(),
+      }),
+    ),
   }),
 )
 const form = useForm({
   validationSchema: formSchema,
+  validateOnMount: false,
   initialValues: {
     name: patientStore.patient.name,
     age: patientStore.patient.age,
     address: patientStore.patient.address,
     diagnosis: patientStore.patient.diagnosis,
     protocol: patientStore.patient.protocol,
+    date: patientStore.patient.date,
+    bsa: patientStore.patient.bsa,
+    room: patientStore.patient.room,
+    gender: patientStore.patient.gender,
+    caseSheetNumber: patientStore.patient.caseSheetNumber,
+    protocolName: patientStore.patient.protocolName,
+    numberOfDoses: patientStore.patient.numberOfDoses,
+    specialist: patientStore.patient.specialist,
+    drugs: patientStore.patient.drugs,
   },
 })
 
@@ -46,30 +96,70 @@ watch(
       address: newPatient.address,
       diagnosis: newPatient.diagnosis,
       protocol: newPatient.protocol,
+      date: newPatient.date,
+      bsa: newPatient.bsa,
+      room: newPatient.room,
+      gender: newPatient.gender,
+      caseSheetNumber: newPatient.caseSheetNumber,
+      protocolName: newPatient.protocolName,
+      numberOfDoses: newPatient.numberOfDoses,
+      specialist: newPatient.specialist,
+      drugs: newPatient.drugs,
     })
   },
   { immediate: true },
 )
 
+const value = computed({
+  get: () => (form.values.date ? parseDate(form.values.date) : undefined),
+  set: (val) => val,
+})
+
+const addDrug = () => {
+  form.setFieldValue('drugs', [
+    ...form.values.drugs,
+    {
+      id: Date.now().toString(),
+      no: form.values.drugs.length + 1,
+    },
+  ])
+}
+
+const removeDrug = (index) => {
+  form.setFieldValue(
+    'drugs',
+    form.values.drugs.filter((_, i) => i !== index),
+  )
+}
+
 const onSubmit = form.handleSubmit((values) => {
+  console.log(values)
   if (patientStore.patient.id) {
     patientStore.updatePatient(patientStore.patient.id, values)
+    toast({
+      title: 'Patient information updated',
+      description: 'Patient information has been updated successfully',
+      variant: 'success',
+    })
   } else {
     patientStore.addPatient(values)
-    patientStore.toggleOpen()
+    form.resetForm()
+    toast({
+      title: 'Patient added',
+      description: 'Patient information has been added successfully',
+      variant: 'success',
+    })
   }
 })
 </script>
 
 <template>
-  <Dialog :open="patientStore.open" @update:open="(value) => !value && patientStore.toggleOpen()">
-    <!-- <DialogHeader>
-      <DialogTitle>{{ patientData?.id ? 'Edit Patient' : 'New Patient' }}</DialogTitle>
-    </DialogHeader> -->
-    <DialogContent>
-      <form @submit.prevent="onSubmit" class="space-y-4">
+  <div class="space-y-4">
+    <form @submit.prevent="onSubmit" class="flex flex-col gap-4">
+      <h2 class="text-2xl font-bold">Personal Information</h2>
+      <div class="grid grid-cols-12 gap-4">
         <FormField name="name" v-slot="{ componentField }">
-          <FormItem>
+          <FormItem class="col-span-4">
             <FormLabel>Name</FormLabel>
             <FormControl>
               <Input type="text" placeholder="Patient name" v-bind="componentField" />
@@ -78,7 +168,7 @@ const onSubmit = form.handleSubmit((values) => {
           </FormItem>
         </FormField>
         <FormField name="age" v-slot="{ componentField }">
-          <FormItem>
+          <FormItem class="col-span-4">
             <FormLabel>Age</FormLabel>
             <FormControl>
               <Input type="number" v-bind="componentField" />
@@ -86,8 +176,38 @@ const onSubmit = form.handleSubmit((values) => {
             <FormMessage />
           </FormItem>
         </FormField>
+        <FormField v-slot="{ componentField }" name="gender">
+          <FormItem class="col-span-4">
+            <FormLabel>Gender</FormLabel>
+
+            <Select v-bind="componentField">
+              <FormControl>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select patient's gender" />
+                </SelectTrigger>
+              </FormControl>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="Male">Male</SelectItem>
+                  <SelectItem value="Female">Female</SelectItem>
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+
+        <FormField name="bsa" v-slot="{ componentField }">
+          <FormItem class="col-span-4">
+            <FormLabel>BSA</FormLabel>
+            <FormControl>
+              <Input type="text" v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
         <FormField name="address" v-slot="{ componentField }">
-          <FormItem>
+          <FormItem class="col-span-4">
             <FormLabel>Address</FormLabel>
             <FormControl>
               <Input type="text" placeholder="Patient address" v-bind="componentField" />
@@ -95,54 +215,178 @@ const onSubmit = form.handleSubmit((values) => {
             <FormMessage />
           </FormItem>
         </FormField>
+        <div class="col-span-12"><h2 class="text-2xl font-bold">Medical Information</h2></div>
         <FormField name="diagnosis" v-slot="{ componentField }">
-          <FormItem>
+          <FormItem class="col-span-4">
             <FormLabel>Diagnosis</FormLabel>
             <FormControl>
-              <Textarea i rows="4" v-bind="componentField" />
+              <Input type="text" v-bind="componentField" />
             </FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
         <FormField name="protocol" v-slot="{ componentField }">
-          <FormItem>
+          <FormItem class="col-span-4">
             <FormLabel>Treatment Protocol</FormLabel>
             <FormControl>
-              <Textarea i rows="4" v-bind="componentField" />
+              <Input type="text" v-bind="componentField" />
             </FormControl>
             <FormMessage />
           </FormItem>
         </FormField>
-        <!-- <div class="space-y-2">
-          <Label for="name">Name</Label>
-          <Input id="name" v-model="patientStore.patient.name" required />
-        </div> -->
+        <FormField name="protocolName" v-slot="{ componentField }">
+          <FormItem class="col-span-4">
+            <FormLabel>Protocol Name</FormLabel>
+            <FormControl>
+              <Input type="text" v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+        <FormField name="numberOfDoses" v-slot="{ componentField }">
+          <FormItem class="col-span-3">
+            <FormLabel>Number of Doses</FormLabel>
+            <FormControl>
+              <Input type="number" v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+        <FormField name="caseSheetNumber" v-slot="{ componentField }">
+          <FormItem class="col-span-3">
+            <FormLabel>Case sheet number</FormLabel>
+            <FormControl>
+              <Input type="text" v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+        <FormField name="room" v-slot="{ componentField }">
+          <FormItem class="col-span-3">
+            <FormLabel>Room number</FormLabel>
+            <FormControl>
+              <Input type="text" v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+        <FormField name="specialist" v-slot="{ componentField }">
+          <FormItem class="col-span-3">
+            <FormLabel>Specialist Name</FormLabel>
+            <FormControl>
+              <Input type="text" v-bind="componentField" />
+            </FormControl>
+            <FormMessage />
+          </FormItem>
+        </FormField>
+        <FormField name="date">
+          <FormItem class="flex flex-col justify-center col-span-4">
+            <FormLabel>Session date</FormLabel>
+            <Popover>
+              <PopoverTrigger as-child>
+                <FormControl>
+                  <Button
+                    variant="outline"
+                    :class="
+                      cn(
+                        'w-[full] h-10ps-3 text-start font-normal',
+                        !value && 'text-muted-foreground',
+                      )
+                    "
+                  >
+                    <span>{{ value ? df.format(toDate(value)) : 'Pick a date' }}</span>
+                    <CalendarIcon class="ms-auto h-4 w-4 opacity-50" />
+                  </Button>
+                  <input hidden />
+                </FormControl>
+              </PopoverTrigger>
+              <PopoverContent class="w-auto p-0">
+                <Calendar
+                  v-model:placeholder="placeholder"
+                  v-model="value"
+                  calendar-label="Date of birth"
+                  initial-focus
+                  :min-value="new CalendarDate(1900, 1, 1)"
+                  :max-value="today(getLocalTimeZone())"
+                  @update:model-value="
+                    (v) => {
+                      if (v) {
+                        form.setFieldValue('date', v.toString())
+                      } else {
+                        form.setFieldValue('date', undefined)
+                      }
+                    }
+                  "
+                />
+              </PopoverContent>
+            </Popover>
 
-        <!-- <div class="space-y-2">
-          <Label for="age">Age</Label>
-          <Input id="age" type="number" required v-model="patientStore.patient.age" />
-        </div> -->
+            <FormMessage />
+          </FormItem>
+        </FormField>
+        <FormField name="drugs" v-slot="{ componentField }">
+          <FormItem class="col-span-12">
+            <div class="flex justify-between items-center">
+              <FormLabel class="text-xl font-bold">Drugs</FormLabel>
+              <Button @click="addDrug" type="button" size="sm">Add Drug</Button>
+            </div>
+            <div class="flex flex-col gap-4">
+              <div
+                v-for="(drug, index) in componentField.modelValue"
+                :key="drug.no"
+                class="flex flex-col gap-4"
+              >
+                <div class="flex items-center justify-start">
+                  <Button
+                    @click="removeDrug(index)"
+                    type="button"
+                    size="sm"
+                    variant="ghost"
+                    class="text-destructive hover:bg-destructive/10 hover:text-destructive"
+                    ><Trash2Icon class="w-4 h-4"
+                  /></Button>
 
-        <!-- <div class="space-y-2">
-          <Label for="address">Address</Label>
-          <Input id="address" required v-model="patientStore.patient.address" />
-        </div> -->
+                  <Label> Drug {{ drug.no }}</Label>
+                </div>
+                <div class="grid grid-cols-6 gap-4">
+                  <Input type="text" v-model="drug.no" class="col-span-2" placeholder="No" />
+                  <Input type="text" v-model="drug.name" class="col-span-2" placeholder="Name" />
+                  <Input
+                    type="text"
+                    v-model="drug.dilutedIn"
+                    class="col-span-2"
+                    placeholder="Diluted In"
+                  />
+                  <Input
+                    type="text"
+                    v-model="drug.routOfAdministration"
+                    class="col-span-2"
+                    placeholder="Rout Of Administration"
+                  />
+                  <Input
+                    type="text"
+                    v-model="drug.timeToStartAdministration"
+                    class="col-span-2"
+                    placeholder="Time To Start Administration"
+                  />
+                  <Input
+                    type="text"
+                    v-model="drug.durationOfAdministration"
+                    class="col-span-2"
+                    placeholder="Duration Of Administration"
+                  />
+                  <Input type="text" v-model="drug.note" class="col-span-2" placeholder="Note" />
+                </div>
 
-        <!-- <div class="space-y-2">
-          <Label for="diagnosis">Diagnosis</Label>
-          <Textarea id="diagnosis" rows="4" v-model="patientStore.patient.diagnosis" />
-        </div> -->
-
-        <!-- <div class="space-y-2">
-          <Label for="protocol">Treatment Protocol</Label>
-          <Textarea id="protocol" rows="4" v-model="patientStore.patient.protocol" />
-        </div> -->
-        <DialogFooter>
-          <Button type="submit">
-            {{ patientStore.patient.id ? 'Update Patient' : 'Add Patient' }}
-          </Button>
-        </DialogFooter>
-      </form>
-    </DialogContent>
-  </Dialog>
+                <Separator class="my-4" />
+              </div>
+            </div>
+          </FormItem>
+        </FormField>
+        <Button type="submit">{{
+          patientStore.patient.id ? 'Update Patient' : 'Add Patient'
+        }}</Button>
+      </div>
+    </form>
+  </div>
 </template>

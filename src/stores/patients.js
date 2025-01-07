@@ -11,14 +11,24 @@ export const usePatientStore = defineStore('patients', () => {
       diagnosis: 'Diagnosis',
       protocol: 'Protocol',
       specialist: 'Specialist name',
-      date: '2025/01/01',
+      date: '',
       bsa: '1.73',
       room: '101',
       gender: 'Male',
       caseSheetNumber: '1234567890',
       protocolName: 'Protocol Name',
-      numberOfDoses: '10',
+      numberOfDoses: 2,
       drugs: [
+        {
+          id: Date.now().toString(),
+          no: 1,
+          name: 'Drug 1',
+          dilutedIn: 'Diluted in',
+          routOfAdministration: 'Rout of administration',
+          timeToStartAdministration: 'Time to start administration',
+          durationOfAdministration: 'Duration of administration',
+          note: 'Note',
+        },
         {
           id: Date.now().toString(),
           no: 1,
@@ -44,7 +54,26 @@ export const usePatientStore = defineStore('patients', () => {
     address: '',
     diagnosis: '',
     protocol: '',
-    // sessions: [],
+    specialist: '',
+    date: '',
+    bsa: '',
+    room: '',
+    gender: '',
+    caseSheetNumber: '',
+    protocolName: '',
+    numberOfDoses: '',
+    drugs: [
+      {
+        id: Date.now().toString(),
+        no: 1,
+        name: '',
+        dilutedIn: '',
+        routOfAdministration: '',
+        timeToStartAdministration: '',
+        durationOfAdministration: '',
+        note: '',
+      },
+    ],
   })
   const open = ref(false)
 
@@ -92,7 +121,26 @@ export const usePatientStore = defineStore('patients', () => {
       address: '',
       diagnosis: '',
       protocol: '',
-      // sessions: [],
+      specialist: '',
+      date: '',
+      bsa: '',
+      room: '',
+      gender: '',
+      caseSheetNumber: '',
+      protocolName: '',
+      numberOfDoses: '',
+      drugs: [
+        {
+          id: Date.now().toString(),
+          no: 1,
+          name: '',
+          dilutedIn: '',
+          routOfAdministration: '',
+          timeToStartAdministration: '',
+          durationOfAdministration: '',
+          note: '',
+        },
+      ],
     }
   }
 

@@ -1,15 +1,22 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
+import Toaster from '@/components/ui/toast/Toaster.vue'
+import ToggleMode from '@/components/ToggleMode.vue'
+import Navbar from '@/components/layout/Navbar.vue'
 </script>
 
 <template>
   <div class="relative">
-    <header>
-      <nav class="flex justify-between items-center p-4 bg-gray-800 text-white">
-        <router-link to="/">Home</router-link>
-      </nav>
+    <header class="flex items-center justify-center p-4">
+      <Navbar />
+      <div class="self-end">
+        <ToggleMode />
+      </div>
     </header>
-    <router-view class="p-4"></router-view>
+    <main class="p-6">
+      <router-view></router-view>
+    </main>
+    <Toaster />
   </div>
 </template>
 
