@@ -1,28 +1,15 @@
 <script setup>
-import html2pdf from 'html2pdf.js'
 import { usePatientStore } from '@/stores/patients'
 import { useRoute } from 'vue-router'
 import { Button } from './ui/button'
-const downloadPDF = () => {
-  const element = document.getElementById('pdf-content')
+import { useVueToPrint } from 'vue-to-print'
+import { ref } from 'vue'
 
-  element.classList.add('print-force-black')
-
-  const options = {
-    filename: 'patient-details.pdf',
-    image: { type: 'jpeg', quality: 0.98 },
-    html2canvas: { scale: 2 },
-    jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
-  }
-
-  html2pdf()
-    .set(options)
-    .from(element)
-    .save()
-    .then(() => {
-      element.classList.remove('print-force-black')
-    })
-}
+const componentRef = ref()
+const { handlePrint } = useVueToPrint({
+  content: componentRef,
+  documentTitle: 'patient_protocol',
+})
 const route = useRoute()
 const patientStore = usePatientStore()
 const patient = patientStore.patients.find((patient) => patient.id === route.params.id)
@@ -33,9 +20,9 @@ console.log(patient)
   <div v-if="patient">
     <div class="flex justify-between mb-6">
       <h1 class="text-2xl font-bold mb-4">Patient Details</h1>
-      <Button @click="downloadPDF">Download PDF</Button>
+      <Button @click="handlePrint">Download PDF</Button>
     </div>
-    <div id="pdf-content" class="border p-4">
+    <div id="pdf-content" class="border p-4" ref="componentRef">
       <div class="flex flex-col gap-4">
         <div class="flex justify-between items-center">
           <h2 class="text-xl font-bold mb-2 underline">Diagnosis: {{ patient.diagnosis }}</h2>
@@ -142,22 +129,3 @@ console.log(patient)
     <p class="text-center text-2xl font-bold">Patient not found</p>
   </div>
 </template>
-
-<style scoped>
-.print-force-black {
-  color: black !important;
-  padding: 10px !important;
-}
-
-.print-force-black * {
-  color: black !important;
-  padding: 10px !important;
-}
-
-.print-force-black table,
-.print-force-black th,
-.print-force-black td {
-  border-color: black !important;
-  font-size: 11px !important;
-}
-</style>
