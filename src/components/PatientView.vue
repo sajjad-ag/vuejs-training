@@ -143,15 +143,18 @@ console.log(patient)
 <style scoped>
 .print-force-black {
   color: black !important;
+  padding: 10px !important;
 }
 
 .print-force-black * {
   color: black !important;
+  padding: 10px !important;
 }
 
 .print-force-black table,
 .print-force-black th,
 .print-force-black td {
   border-color: black !important;
+  font-size: 11px !important;
 }
 </style>
