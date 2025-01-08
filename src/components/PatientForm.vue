@@ -25,7 +25,7 @@ import {
 } from './ui/select'
 import { useToast } from './ui/toast'
 import { Popover, PopoverContent, PopoverTrigger } from './ui/popover'
-import { Calendar as CalendarIcon, Trash2Icon } from 'lucide-vue-next'
+import { Calendar as CalendarIcon } from 'lucide-vue-next'
 import { Calendar } from './ui/calendar'
 import { cn } from '@/lib/utils'
 import { toDate } from 'radix-vue/date'

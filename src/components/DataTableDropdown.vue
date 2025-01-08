@@ -1,10 +1,4 @@
 <script setup>
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu'
 import { usePatientStore } from '@/stores/patients'
 import { useRouter } from 'vue-router'
 import { useToast } from './ui/toast'
@@ -12,6 +6,7 @@ import { Trash2Icon, EditIcon, PrinterIcon } from 'lucide-vue-next'
 import { Button } from './ui/button'
 const router = useRouter()
 
+// eslint-disable-next-line no-unused-vars
 const props = defineProps({
   patient: {
     type: Object,
@@ -32,6 +27,7 @@ const handleDelete = (id) => {
       variant: 'success',
     })
   } catch (error) {
+    console.error(error)
     toast({
       title: 'Error',
       description: 'Error deleting patient',
@@ -52,14 +48,6 @@ const handleView = (patient) => {
 </script>
 
 <template>
-  <!-- <DropdownMenu>
-    <DropdownMenuTrigger as="Button" variant="ghost" class="w-8 h-8">...</DropdownMenuTrigger>
-    <DropdownMenuContent>
-      <DropdownMenuItem @click="() => handleView(patient)"> View </DropdownMenuItem>
-      <DropdownMenuItem @click="() => handleEdit(patient)"> Edit </DropdownMenuItem>
-      <DropdownMenuItem @click="() => handleDelete(patient.id)"> Delete </DropdownMenuItem>
-    </DropdownMenuContent>
-  </DropdownMenu> -->
   <div class="flex items-center justify-start">
     <Button
       variant="ghost"

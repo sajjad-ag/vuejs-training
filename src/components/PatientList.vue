@@ -27,8 +27,7 @@ const handleAddNew = () => {
       <h2 class="text-2xl font-bold">Patients Management</h2>
       <Button @click="handleAddNew">Add New Patient</Button>
     </div>
-    <!-- <DataTable :columns="patientColumns" :data="patientStore.patients" />
-      -->
+
     <div class="overflow-x-auto w-full h-full rounded-xl border border-gray-400">
       <Table>
         <TableHeader v-if="patientStore.patients.length > 0">
