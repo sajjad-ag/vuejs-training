@@ -2,13 +2,7 @@
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import {
-  CalendarDate,
-  DateFormatter,
-  getLocalTimeZone,
-  parseDate,
-  today,
-} from '@internationalized/date'
+import { CalendarDate, DateFormatter, parseDate } from '@internationalized/date'
 import { usePatientStore } from '@/stores/patients'
 import { toTypedSchema } from '@vee-validate/zod'
 import * as z from 'zod'
@@ -53,9 +47,9 @@ const formSchema = toTypedSchema(
     protocolName: z.string().min(1, 'Protocol name is required'),
     numberOfDoses: z.number({ invalid_type_error: 'Number of doses must be a number' }),
     specialist: z.string().min(1, 'Specialist name is required'),
-    drugs: z
-      .array(
-        z.object({
+    drugs: z.array(
+      z.object(
+        {
           no: z.string(),
           name: z.string(),
           dilutedIn: z.string(),
@@ -64,9 +58,10 @@ const formSchema = toTypedSchema(
           durationOfAdministration: z.string(),
           note: z.string(),
           dose: z.string(),
-        }),
-      )
-      .optional(),
+        },
+        { required_error: 'All of drug fields are required.' },
+      ),
+    ),
   }),
 )
 const form = useForm({
@@ -319,7 +314,6 @@ const onSubmit = form.handleSubmit((values) => {
                     calendar-label="Date of birth"
                     initial-focus
                     :min-value="new CalendarDate(1900, 1, 1)"
-                    :max-value="today(getLocalTimeZone())"
                     @update:model-value="
                       (v) => {
                         if (v) {
@@ -415,6 +409,7 @@ const onSubmit = form.handleSubmit((values) => {
                   <Separator class="my-4 text-primary" />
                 </div>
               </div>
+              <FormMessage />
             </FormItem>
           </FormField>
         </div>
