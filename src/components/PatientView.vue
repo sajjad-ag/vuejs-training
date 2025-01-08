@@ -6,7 +6,6 @@ import { Button } from './ui/button'
 const downloadPDF = () => {
   const element = document.getElementById('pdf-content')
 
-  // Force black text for PDF generation
   element.classList.add('print-force-black')
 
   const options = {
@@ -148,5 +147,11 @@ console.log(patient)
 
 .print-force-black * {
   color: black !important;
+}
+
+.print-force-black table,
+.print-force-black th,
+.print-force-black td {
+  border-color: black !important;
 }
 </style>
