@@ -14,7 +14,7 @@ import Navbar from '@/components/layout/Navbar.vue'
       </div>
     </header>
     <main class="p-6">
-      <router-view></router-view>
+      <RouterView />
     </main>
     <Toaster />
   </div>

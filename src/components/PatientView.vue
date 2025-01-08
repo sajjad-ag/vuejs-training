@@ -21,7 +21,6 @@ const downloadPDF = () => {
     .from(element)
     .save()
     .then(() => {
-      // Remove the class after PDF generation
       element.classList.remove('print-force-black')
     })
 }
