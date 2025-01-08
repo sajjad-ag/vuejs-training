@@ -53,17 +53,20 @@ const formSchema = toTypedSchema(
     protocolName: z.string().min(1, 'Protocol name is required'),
     numberOfDoses: z.number({ invalid_type_error: 'Number of doses must be a number' }),
     specialist: z.string().min(1, 'Specialist name is required'),
-    drugs: z.array(
-      z.object({
-        no: z.string(),
-        name: z.string(),
-        dilutedIn: z.string(),
-        routOfAdministration: z.string(),
-        timeToStartAdministration: z.string(),
-        durationOfAdministration: z.string(),
-        note: z.string(),
-      }),
-    ),
+    drugs: z
+      .array(
+        z.object({
+          no: z.string(),
+          name: z.string(),
+          dilutedIn: z.string(),
+          routOfAdministration: z.string(),
+          timeToStartAdministration: z.string(),
+          durationOfAdministration: z.string(),
+          note: z.string(),
+          dose: z.string(),
+        }),
+      )
+      .optional(),
   }),
 )
 const form = useForm({
@@ -127,7 +130,6 @@ const addDrug = () => {
     ...form.values.drugs,
     {
       id: Date.now().toString(),
-      no: '',
     },
   ])
 }
@@ -345,19 +347,19 @@ const onSubmit = form.handleSubmit((values) => {
               <div class="flex flex-col gap-4">
                 <div
                   v-for="(drug, index) in componentField.modelValue"
-                  :key="drug.no"
+                  :key="index"
                   class="flex flex-col gap-4"
                 >
-                  <div class="grid grid-cols-6 gap-2">
-                    <div class="col-span-6 md:col-span-2 space-y-2">
+                  <div class="grid grid-cols-12 gap-2">
+                    <div class="col-span-12 md:col-span-3 space-y-2">
                       <Label for="drug-no">Drug No</Label>
                       <Input type="text" v-model="drug.no" placeholder="No" id="drug-no" />
                     </div>
-                    <div class="col-span-6 md:col-span-2 space-y-2">
+                    <div class="col-span-12 md:col-span-3 space-y-2">
                       <Label for="drug-name">Drug Name</Label>
                       <Input type="text" v-model="drug.name" placeholder="Name" id="drug-name" />
                     </div>
-                    <div class="col-span-6 md:col-span-2 space-y-2">
+                    <div class="col-span-12 md:col-span-3 space-y-2">
                       <Label for="diluted-in">Diluted in</Label>
                       <Input
                         type="text"
@@ -366,7 +368,11 @@ const onSubmit = form.handleSubmit((values) => {
                         id="diluted-in"
                       />
                     </div>
-                    <div class="col-span-6 md:col-span-2 space-y-2">
+                    <div class="col-span-12 md:col-span-3 space-y-2">
+                      <Label for="dose">Dose</Label>
+                      <Input type="text" v-model="drug.dose" placeholder="Dose" id="dose" />
+                    </div>
+                    <div class="col-span-12 md:col-span-4 space-y-2">
                       <Label for="rout-of-administration">Rout Of Administration</Label>
                       <Input
                         type="text"
@@ -376,7 +382,7 @@ const onSubmit = form.handleSubmit((values) => {
                       />
                     </div>
 
-                    <div class="col-span-6 md:col-span-2 space-y-2">
+                    <div class="col-span-12 md:col-span-4 space-y-2">
                       <Label for="time-to-start-administration">Time To Start Administration</Label>
                       <Input
                         type="text"
@@ -386,7 +392,7 @@ const onSubmit = form.handleSubmit((values) => {
                       />
                     </div>
 
-                    <div class="col-span-6 md:col-span-2 space-y-2">
+                    <div class="col-span-12 md:col-span-4 space-y-2">
                       <Label for="duration-of-administration">Duration Of Administration</Label>
                       <Input
                         type="text"
@@ -396,7 +402,7 @@ const onSubmit = form.handleSubmit((values) => {
                       />
                     </div>
 
-                    <div class="col-span-6 md:col-span-2 space-y-2">
+                    <div class="col-span-12 md:col-span-4 space-y-2">
                       <Label for="note">Note</Label>
                       <Textarea v-model="drug.note" placeholder="Notes" id="note" />
                     </div>
