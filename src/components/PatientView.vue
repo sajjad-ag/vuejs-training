@@ -30,7 +30,7 @@ console.log(patient)
 </script>
 
 <template>
-  <div>
+  <div v-if="patient">
     <div class="flex justify-between mb-6">
       <h1 class="text-2xl font-bold mb-4">Patient Details</h1>
       <Button @click="downloadPDF">Download PDF</Button>
@@ -137,6 +137,9 @@ console.log(patient)
         </div>
       </div>
     </div>
+  </div>
+  <div v-else>
+    <p class="text-center text-2xl font-bold">Patient not found</p>
   </div>
 </template>
 

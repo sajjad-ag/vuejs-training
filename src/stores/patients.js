@@ -4,7 +4,7 @@ import { ref } from 'vue'
 export const usePatientStore = defineStore('patients', () => {
   const patients = ref([
     {
-      id: Date.now().toString(),
+      id: '214534',
       name: 'John Doe',
       age: 30,
       address: '123 Main St, Anytown, USA',
@@ -44,7 +44,7 @@ export const usePatientStore = defineStore('patients', () => {
       ],
     },
     {
-      id: Date.now().toString(),
+      id: '6547345',
       name: 'Jane Smith',
       age: 45,
       address: '123 Main St, Anytown, USA',

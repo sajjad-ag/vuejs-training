@@ -1,3 +1,4 @@
+import NotFound from '@/components/NotFound.vue'
 import PatientForm from '@/components/PatientForm.vue'
 import PatientList from '@/components/PatientList.vue'
 import PatientView from '@/components/PatientView.vue'
@@ -25,6 +26,10 @@ const router = createRouter({
       path: '/patient/:id/edit',
       name: 'patient-edit',
       component: PatientForm,
+    },
+    {
+      path: '/:pathMatch(.*)*',
+      component: NotFound,
     },
   ],
 })
