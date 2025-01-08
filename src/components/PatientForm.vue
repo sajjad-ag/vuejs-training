@@ -120,7 +120,6 @@ const addDrug = () => {
     ...form.values.drugs,
     {
       id: Date.now().toString(),
-      no: form.values.drugs.length + 1,
     },
   ])
 }
@@ -159,7 +158,7 @@ const onSubmit = form.handleSubmit((values) => {
       <h2 class="text-2xl font-bold">Personal Information</h2>
       <div class="grid grid-cols-12 gap-4">
         <FormField name="name" v-slot="{ componentField }">
-          <FormItem class="col-span-4">
+          <FormItem class="col-span-12 md:col-span-4">
             <FormLabel>Name</FormLabel>
             <FormControl>
               <Input type="text" placeholder="Patient name" v-bind="componentField" />
@@ -168,7 +167,7 @@ const onSubmit = form.handleSubmit((values) => {
           </FormItem>
         </FormField>
         <FormField name="age" v-slot="{ componentField }">
-          <FormItem class="col-span-4">
+          <FormItem class="col-span-12 md:col-span-4">
             <FormLabel>Age</FormLabel>
             <FormControl>
               <Input type="number" v-bind="componentField" />
@@ -177,7 +176,7 @@ const onSubmit = form.handleSubmit((values) => {
           </FormItem>
         </FormField>
         <FormField v-slot="{ componentField }" name="gender">
-          <FormItem class="col-span-4">
+          <FormItem class="col-span-12 md:col-span-4">
             <FormLabel>Gender</FormLabel>
 
             <Select v-bind="componentField">
@@ -198,7 +197,7 @@ const onSubmit = form.handleSubmit((values) => {
         </FormField>
 
         <FormField name="bsa" v-slot="{ componentField }">
-          <FormItem class="col-span-4">
+          <FormItem class="col-span-12 md:col-span-4">
             <FormLabel>BSA</FormLabel>
             <FormControl>
               <Input type="text" v-bind="componentField" />
@@ -207,7 +206,7 @@ const onSubmit = form.handleSubmit((values) => {
           </FormItem>
         </FormField>
         <FormField name="address" v-slot="{ componentField }">
-          <FormItem class="col-span-4">
+          <FormItem class="col-span-12 md:col-span-4">
             <FormLabel>Address</FormLabel>
             <FormControl>
               <Input type="text" placeholder="Patient address" v-bind="componentField" />
@@ -217,7 +216,7 @@ const onSubmit = form.handleSubmit((values) => {
         </FormField>
         <div class="col-span-12"><h2 class="text-2xl font-bold">Medical Information</h2></div>
         <FormField name="diagnosis" v-slot="{ componentField }">
-          <FormItem class="col-span-4">
+          <FormItem class="col-span-12 md:col-span-4">
             <FormLabel>Diagnosis</FormLabel>
             <FormControl>
               <Input type="text" v-bind="componentField" />
@@ -226,7 +225,7 @@ const onSubmit = form.handleSubmit((values) => {
           </FormItem>
         </FormField>
         <FormField name="protocol" v-slot="{ componentField }">
-          <FormItem class="col-span-4">
+          <FormItem class="col-span-12 md:col-span-4">
             <FormLabel>Treatment Protocol</FormLabel>
             <FormControl>
               <Input type="text" v-bind="componentField" />
@@ -235,7 +234,7 @@ const onSubmit = form.handleSubmit((values) => {
           </FormItem>
         </FormField>
         <FormField name="protocolName" v-slot="{ componentField }">
-          <FormItem class="col-span-4">
+          <FormItem class="col-span-12 md:col-span-4">
             <FormLabel>Protocol Name</FormLabel>
             <FormControl>
               <Input type="text" v-bind="componentField" />
@@ -244,7 +243,7 @@ const onSubmit = form.handleSubmit((values) => {
           </FormItem>
         </FormField>
         <FormField name="numberOfDoses" v-slot="{ componentField }">
-          <FormItem class="col-span-3">
+          <FormItem class="col-span-12 md:col-span-3">
             <FormLabel>Number of Doses</FormLabel>
             <FormControl>
               <Input type="number" v-bind="componentField" />
@@ -253,7 +252,7 @@ const onSubmit = form.handleSubmit((values) => {
           </FormItem>
         </FormField>
         <FormField name="caseSheetNumber" v-slot="{ componentField }">
-          <FormItem class="col-span-3">
+          <FormItem class="col-span-12 md:col-span-3">
             <FormLabel>Case sheet number</FormLabel>
             <FormControl>
               <Input type="text" v-bind="componentField" />
@@ -262,7 +261,7 @@ const onSubmit = form.handleSubmit((values) => {
           </FormItem>
         </FormField>
         <FormField name="room" v-slot="{ componentField }">
-          <FormItem class="col-span-3">
+          <FormItem class="col-span-12 md:col-span-3">
             <FormLabel>Room number</FormLabel>
             <FormControl>
               <Input type="text" v-bind="componentField" />
@@ -271,7 +270,7 @@ const onSubmit = form.handleSubmit((values) => {
           </FormItem>
         </FormField>
         <FormField name="specialist" v-slot="{ componentField }">
-          <FormItem class="col-span-3">
+          <FormItem class="col-span-12 md:col-span-3">
             <FormLabel>Specialist Name</FormLabel>
             <FormControl>
               <Input type="text" v-bind="componentField" />
@@ -280,7 +279,7 @@ const onSubmit = form.handleSubmit((values) => {
           </FormItem>
         </FormField>
         <FormField name="date">
-          <FormItem class="flex flex-col justify-center col-span-4">
+          <FormItem class="flex flex-col justify-center col-span-12 md:col-span-4">
             <FormLabel>Session date</FormLabel>
             <Popover>
               <PopoverTrigger as-child>
@@ -349,33 +348,57 @@ const onSubmit = form.handleSubmit((values) => {
                   <Label> Drug {{ drug.no }}</Label>
                 </div>
                 <div class="grid grid-cols-6 gap-4">
-                  <Input type="text" v-model="drug.no" class="col-span-2" placeholder="No" />
-                  <Input type="text" v-model="drug.name" class="col-span-2" placeholder="Name" />
-                  <Input
-                    type="text"
-                    v-model="drug.dilutedIn"
-                    class="col-span-2"
-                    placeholder="Diluted In"
-                  />
-                  <Input
-                    type="text"
-                    v-model="drug.routOfAdministration"
-                    class="col-span-2"
-                    placeholder="Rout Of Administration"
-                  />
-                  <Input
-                    type="text"
-                    v-model="drug.timeToStartAdministration"
-                    class="col-span-2"
-                    placeholder="Time To Start Administration"
-                  />
-                  <Input
-                    type="text"
-                    v-model="drug.durationOfAdministration"
-                    class="col-span-2"
-                    placeholder="Duration Of Administration"
-                  />
-                  <Input type="text" v-model="drug.note" class="col-span-2" placeholder="Note" />
+                  <div class="col-span-6 md:col-span-2 space-y-2">
+                    <Label for="drug-no">Drug No</Label>
+                    <Input type="text" v-model="drug.no" placeholder="No" id="drug-no" />
+                  </div>
+                  <div class="col-span-6 md:col-span-2 space-y-2">
+                    <Label for="drug-name">Drug Name</Label>
+                    <Input type="text" v-model="drug.name" placeholder="Name" id="drug-name" />
+                  </div>
+                  <div class="col-span-6 md:col-span-2 space-y-2">
+                    <Label for="diluted-in">Diluted in</Label>
+                    <Input
+                      type="text"
+                      v-model="drug.dilutedIn"
+                      placeholder="Diluted In"
+                      id="diluted-in"
+                    />
+                  </div>
+                  <div class="col-span-6 md:col-span-2 space-y-2">
+                    <Label for="rout-of-administration">Rout Of Administration</Label>
+                    <Input
+                      type="text"
+                      v-model="drug.routOfAdministration"
+                      placeholder="Rout Of Administration"
+                      id="rout-of-administration"
+                    />
+                  </div>
+
+                  <div class="col-span-6 md:col-span-2 space-y-2">
+                    <Label for="time-to-start-administration">Time To Start Administration</Label>
+                    <Input
+                      type="text"
+                      v-model="drug.timeToStartAdministration"
+                      placeholder="Time To Start Administration"
+                      id="time-to-start-administration"
+                    />
+                  </div>
+
+                  <div class="col-span-6 md:col-span-2 space-y-2">
+                    <Label for="duration-of-administration">Duration Of Administration</Label>
+                    <Input
+                      type="text"
+                      v-model="drug.durationOfAdministration"
+                      placeholder="Duration Of Administration"
+                      id="duration-of-administration"
+                    />
+                  </div>
+
+                  <div class="col-span-6 md:col-span-2 space-y-2">
+                    <Label for="note">Note</Label>
+                    <Textarea v-model="drug.note" placeholder="Notes" id="note" />
+                  </div>
                 </div>
 
                 <Separator class="my-4" />
@@ -383,7 +406,7 @@ const onSubmit = form.handleSubmit((values) => {
             </div>
           </FormItem>
         </FormField>
-        <Button type="submit">{{
+        <Button type="submit" class="w-fit">{{
           patientStore.patient.id ? 'Update Patient' : 'Add Patient'
         }}</Button>
       </div>

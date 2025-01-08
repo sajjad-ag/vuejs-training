@@ -132,7 +132,7 @@ export const usePatientStore = defineStore('patients', () => {
       drugs: [
         {
           id: Date.now().toString(),
-          no: 1,
+          no: '',
           name: '',
           dilutedIn: '',
           routOfAdministration: '',
