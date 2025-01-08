@@ -23,7 +23,7 @@ console.log(patient)
       <Button @click="handlePrint">Download PDF</Button>
     </div>
     <div id="pdf-content" class="border p-4" ref="componentRef">
-      <div class="flex flex-col gap-4">
+      <div class="flex flex-col gap-4 overflow-x-auto">
         <div class="flex justify-between items-center">
           <h2 class="text-xl font-bold mb-2 underline">Diagnosis: {{ patient.diagnosis }}</h2>
           <h2 class="text-xl font-bold mb-2 underline">Patient Protocol: {{ patient.protocol }}</h2>
@@ -31,82 +31,84 @@ console.log(patient)
         <h2 class="text-xl font-bold mb-2 underline text-center">
           Chemotherapy Re-constitution Request Form
         </h2>
-        <table class="w-full border-2 border-black dark:border-white my-5">
-          <tr>
-            <th class="border border-black dark:border-white p-2 text-left" colspan="3">
-              Patient Name: {{ patient.name }}
-            </th>
-            <th class="border border-black p-2 dark:border-white text-left" colspan="2">
-              Age: {{ patient.age }} years
-            </th>
-            <th class="border border-black dark:border-white p-2 text-left" colspan="2">
-              BSA: {{ patient.bsa }} M2
-            </th>
-          </tr>
-          <tr>
-            <th class="border border-black dark:border-white p-2 text-left" colspan="4">
-              Specialist Name: {{ patient.specialist }}
-            </th>
+        <div class="overflow-x-auto w-full">
+          <table class="w-full border-2 border-black dark:border-white my-5">
+            <tr>
+              <th class="border border-black dark:border-white p-2 text-left" colspan="3">
+                Patient Name: {{ patient.name }}
+              </th>
+              <th class="border border-black p-2 dark:border-white text-left" colspan="2">
+                Age: {{ patient.age }} years
+              </th>
+              <th class="border border-black dark:border-white p-2 text-left" colspan="2">
+                BSA: {{ patient.bsa }} M2
+              </th>
+            </tr>
+            <tr>
+              <th class="border border-black dark:border-white p-2 text-left" colspan="4">
+                Specialist Name: {{ patient.specialist }}
+              </th>
 
-            <th class="border border-black dark:border-white p-2 text-left" colspan="3">
-              Date: {{ patient.date }}
-            </th>
-          </tr>
-          <tr>
-            <th class="border border-black dark:border-white p-2 text-left" colspan="3">
-              Diagnosis: {{ patient.diagnosis }}
-            </th>
-            <th class="border border-black dark:border-white p-2 text-left" colspan="2">
-              Protocol Name: {{ patient.protocolName }}
-            </th>
-            <th class="border border-black dark:border-white p-2 text-left" colspan="2">
-              Number of doses: {{ patient.numberOfDoses }}
-            </th>
-          </tr>
-          <tr>
-            <th class="border border-black dark:border-white p-2 text-left" colspan="3">
-              Case Sheet Number: {{ patient.caseSheetNumber }}
-            </th>
-            <th class="border border-black dark:border-white p-2 text-left" colspan="2">
-              Room Number: {{ patient.room }}
-            </th>
-            <th class="border border-black dark:border-white p-2 text-left" colspan="2">
-              Gender: {{ patient.gender }}
-            </th>
-          </tr>
-          <tr>
-            <th class="border border-black dark:border-white p-2 text-left">No</th>
-            <th class="border border-black dark:border-white p-2 text-left">Drug</th>
-            <th class="border border-black dark:border-white p-2 text-left">Diluted in</th>
-            <th class="border border-black dark:border-white p-2 text-left">
-              Rout of administration
-            </th>
-            <th class="border border-black dark:border-white p-2 text-left">
-              Time to start administration
-            </th>
-            <th class="border border-black dark:border-white p-2 text-left">
-              Duration of administration
-            </th>
-            <th class="border border-black dark:border-white p-2 text-left">Note</th>
-          </tr>
-          <tr v-for="drug in patient.drugs" :key="drug.id">
-            <td class="border border-black dark:border-white p-2 text-left">{{ drug.no }}</td>
-            <td class="border border-black dark:border-white p-2 text-left">{{ drug.name }}</td>
-            <td class="border border-black dark:border-white p-2 text-left">
-              {{ drug.dilutedIn }}
-            </td>
-            <td class="border border-black dark:border-white p-2 text-left">
-              {{ drug.routOfAdministration }}
-            </td>
-            <td class="border border-black dark:border-white p-2 text-left">
-              {{ drug.timeToStartAdministration }}
-            </td>
-            <td class="border border-black dark:border-white p-2 text-left">
-              {{ drug.durationOfAdministration }}
-            </td>
-            <td class="border border-black dark:border-white p-2 text-left">{{ drug.note }}</td>
-          </tr>
-        </table>
+              <th class="border border-black dark:border-white p-2 text-left" colspan="3">
+                Date: {{ patient.date }}
+              </th>
+            </tr>
+            <tr>
+              <th class="border border-black dark:border-white p-2 text-left" colspan="3">
+                Diagnosis: {{ patient.diagnosis }}
+              </th>
+              <th class="border border-black dark:border-white p-2 text-left" colspan="2">
+                Protocol Name: {{ patient.protocolName }}
+              </th>
+              <th class="border border-black dark:border-white p-2 text-left" colspan="2">
+                Number of doses: {{ patient.numberOfDoses }}
+              </th>
+            </tr>
+            <tr>
+              <th class="border border-black dark:border-white p-2 text-left" colspan="3">
+                Case Sheet Number: {{ patient.caseSheetNumber }}
+              </th>
+              <th class="border border-black dark:border-white p-2 text-left" colspan="2">
+                Room Number: {{ patient.room }}
+              </th>
+              <th class="border border-black dark:border-white p-2 text-left" colspan="2">
+                Gender: {{ patient.gender }}
+              </th>
+            </tr>
+            <tr>
+              <th class="border border-black dark:border-white p-2 text-left">No</th>
+              <th class="border border-black dark:border-white p-2 text-left">Drug</th>
+              <th class="border border-black dark:border-white p-2 text-left">Diluted in</th>
+              <th class="border border-black dark:border-white p-2 text-left">
+                Rout of administration
+              </th>
+              <th class="border border-black dark:border-white p-2 text-left">
+                Time to start administration
+              </th>
+              <th class="border border-black dark:border-white p-2 text-left">
+                Duration of administration
+              </th>
+              <th class="border border-black dark:border-white p-2 text-left">Note</th>
+            </tr>
+            <tr v-for="drug in patient.drugs" :key="drug.id">
+              <td class="border border-black dark:border-white p-2 text-left">{{ drug.no }}</td>
+              <td class="border border-black dark:border-white p-2 text-left">{{ drug.name }}</td>
+              <td class="border border-black dark:border-white p-2 text-left">
+                {{ drug.dilutedIn }}
+              </td>
+              <td class="border border-black dark:border-white p-2 text-left">
+                {{ drug.routOfAdministration }}
+              </td>
+              <td class="border border-black dark:border-white p-2 text-left">
+                {{ drug.timeToStartAdministration }}
+              </td>
+              <td class="border border-black dark:border-white p-2 text-left">
+                {{ drug.durationOfAdministration }}
+              </td>
+              <td class="border border-black dark:border-white p-2 text-left">{{ drug.note }}</td>
+            </tr>
+          </table>
+        </div>
         <p>
           ✔ This should be signed first by the hematologist, then the pharmacist, then the
           Re-constituter, and finally by the nurse.
